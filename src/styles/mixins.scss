@@ -1,0 +1,72 @@
+@use "sass:map";
+@import "src/styles/constants";
+
+@mixin minDesktopLg {
+  // => 1526px
+  @media screen and (min-width: map.get($SCREEN_MIN_THRESHOLDS, "desktop")) {
+    @content;
+  }
+}
+
+@mixin maxDesktopSm {
+  // <= 1525px
+  @media screen and (max-width: map.get($SCREEN_MIN_THRESHOLDS, "desktop")-1px) {
+    @content;
+  }
+}
+
+@mixin minDesktopSm {
+  // >= 1280px
+  @media screen and (min-width: map.get($SCREEN_MIN_THRESHOLDS, "desktop_sm")) {
+    @content;
+  }
+}
+
+@mixin maxTabletLg {
+  // <= 1279px
+  @media screen and (max-width: map.get($SCREEN_MIN_THRESHOLDS, "desktop_sm") - 1px) {
+    @content;
+  }
+}
+
+@mixin minTabletLg {
+  // >= 992px
+  @media screen and (min-width: map.get($SCREEN_MIN_THRESHOLDS, "tablet")) {
+    @content;
+  }
+}
+
+@mixin maxTabletSm {
+  // <= 991px
+  @media screen and (max-width: map.get($SCREEN_MIN_THRESHOLDS, "tablet") - 1px) {
+    @content;
+  }
+}
+
+@mixin minTabletSm {
+  // >= 768px
+  @media screen and (min-width: map.get($SCREEN_MIN_THRESHOLDS, "tablet_sm")) {
+    @content;
+  }
+}
+
+@mixin maxMobileLg {
+  // <= 767px
+  @media screen and (max-width: map.get($SCREEN_MIN_THRESHOLDS, "tablet_sm") - 1px) {
+    @content;
+  }
+}
+
+@mixin minMobileSm {
+  // >= 480
+  @media screen and (min-width: map.get($SCREEN_MIN_THRESHOLDS, "mobile_lg")) {
+    @content;
+  }
+}
+
+@mixin maxMobileSm {
+  // <= 479px
+  @media screen and (max-width: map.get($SCREEN_MIN_THRESHOLDS, "mobile_lg") - 1px) {
+    @content;
+  }
+}

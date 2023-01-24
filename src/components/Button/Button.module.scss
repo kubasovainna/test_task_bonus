@@ -1,0 +1,20 @@
+@import '@/styles/mixins';
+@import '@/styles/constants';
+
+.button {
+  padding: 12px 20px;
+  border-radius: 8px;
+  border-color: transparent;
+  color: white;
+  background-image: linear-gradient(to right, #2b5876 0%, #4e4376 51%, #2b5876 100%);
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  box-shadow: 0 5px 15px rgba(78, 67, 118, 0.67);
+
+  &:hover {
+    background-position: right center;
+    box-shadow: 0 5px 25px rgba(78, 67, 118, 1);
+  }
+}
