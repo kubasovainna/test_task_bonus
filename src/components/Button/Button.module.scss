@@ -9,11 +9,18 @@
   background-image: linear-gradient(to right, #2b5876 0%, #4e4376 51%, #2b5876 100%);
   text-align: center;
   text-transform: uppercase;
-  transition: 0.5s;
+  transition: 0.3s;
   background-size: 200% auto;
   box-shadow: 0 5px 15px rgba(78, 67, 118, 0.67);
 
-  &:hover {
+  &:disabled {
+    background-color: silver;
+    background-image: none;
+    color: #807e7e;
+    box-shadow: none;
+  }
+
+  &:hover:enabled {
     background-position: right center;
     box-shadow: 0 5px 25px rgba(78, 67, 118, 1);
   }

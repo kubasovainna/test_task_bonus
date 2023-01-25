@@ -1,9 +1,9 @@
 import React, { ReactElement } from 'react';
 import { Layout } from 'src/components/Layout/Layout';
-import { Wrapper } from '@/components/Wrapper/Wrapper';
+import { Widget } from '@/components/Widget/Widget';
 
 function Home() {
-  return <Wrapper />;
+  return <Widget speed={700} timer={3000} />;
 }
 
 export default Home;
