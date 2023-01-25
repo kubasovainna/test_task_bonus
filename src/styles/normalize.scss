@@ -22,7 +22,7 @@ body {
   padding: 0;
   height: 100%;
 
-  div:first-child {
+  > div:first-child {
     height: 100%;
   }
 }
