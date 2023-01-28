@@ -4,9 +4,12 @@
  * 2. Prevent iOS and IE text size adjust after device orientation change,
  *    without disabling user zoom.
  */
+
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital@0;1&display=swap');
+
 html {
   height: 100%;
-  font-family: sans-serif;
+  font-family: Lato, sans-serif;
   /* 1 */
   -ms-text-size-adjust: 100%;
   /* 2 */

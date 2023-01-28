@@ -13,6 +13,9 @@
 .title {
   color: #3f948a;
   text-transform: uppercase;
+  @include maxTabletSm {
+    text-align: center;
+  }
 }
 
 .content {
@@ -36,10 +39,10 @@
 }
 
 
-.variantsWrapper {
-  z-index: 0;
-  transform: translateY(0);
-}
+//.variantsWrapper {
+//  z-index: 0;
+//  transform: translateY(0);
+//}
 
 .variantItem {
   padding: 0 20px;

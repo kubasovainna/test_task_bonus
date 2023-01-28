@@ -20,7 +20,7 @@
     box-shadow: none;
   }
 
-  &:hover {
+  &:hover:enabled {
     background-position: right center;
     box-shadow: 0 5px 25px rgba(78, 67, 118, 1);
   }

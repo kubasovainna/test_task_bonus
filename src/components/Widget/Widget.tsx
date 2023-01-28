@@ -25,6 +25,10 @@ export const Widget: React.FC<WidgetProps> = ({ children, speed = 1000, timer = 
     return res.json();
   }, []);
 
+  fetchData().then((result) => {
+    setData([...result]);
+  });
+
   //Высота по умолчанию для 1 элемента
   const offset = 35;
   //Показывает запущен ли барабан
@@ -34,34 +38,21 @@ export const Widget: React.FC<WidgetProps> = ({ children, speed = 1000, timer = 
   //Данные вариантов призов от сервера
   const [data, setData] = useState<Variant[]>([]);
   //Вариант, который является победителем (генерируется рандомно)
-  const [isWinnerVariantData, setIsWinnerVariantData] = useState<Variant>();
+  const [isWinnerVariantData, setIsWinnerVariantData] = useState<Variant | null>();
 
   const rollTimeout = useRef<NodeJS.Timeout>();
   const rollInterval = useRef<NodeJS.Timeout>();
 
-  const variantsWrapperStyle =
-    currentIndex <= data!.length && currentIndex !== 0
-      ? {
-          transition: `transform linear 0.1s`,
-          transform: 'translateY(-' + currentIndex * offset + 'px)',
-        }
-      : currentIndex === 1
-      ? {
-          transition: `transform 0s`,
-          transform: 'translateY(-' + (currentIndex + 1) * offset + 'px)',
-        }
-      : {
-          transition: `transform 0s`,
-          transform: 'translateY(-' + currentIndex * offset + 'px)',
-        };
-
-  const roll = () => {
-    if (currentIndex < data!.length) {
-      setCurrentIndex((prevState) => prevState + 1);
-    } else {
-      setCurrentIndex(0);
-    }
-    setTimeout(console.log('currentindex[' + currentIndex + `]-${currentIndex + 1} id`));
+  const variantsWrapperStyleReset = {
+    transition: `transform linear 1ms 0s`,
+    transform: 'none',
+  };
+  const variantsWrapperStyle = {
+    transition: `transform linear ${speed / 10}ms 0s`,
+    transform: 'translateY(-' + currentIndex * offset + 'px)',
+  };
+  const roll = async () => {
+    setCurrentIndex((prevState) => prevState + 1);
   };
 
   const buttonHandler = () => {
@@ -71,13 +62,24 @@ export const Widget: React.FC<WidgetProps> = ({ children, speed = 1000, timer = 
       clearTimeout(rollTimeout.current);
     }
     rollTimeout.current = setTimeout(async () => {
-      // setIsActive(false);
+      setIsActive(false);
       const resultIndex = 1 + Math.floor(Math.random() * data!.length);
-      setTimeout(console.log(resultIndex));
       const winnerEl = await data?.filter((el) => el.id === resultIndex)[0];
-      console.log(winnerEl);
       setIsWinnerVariantData(winnerEl);
-      // setCurrentIndex(resultIndex - 1);
+      setCurrentIndex(resultIndex - 1);
+      if (winnerEl) {
+        console.log('Отправка результата на сервер...');
+        await fetch('http://localhost:8080/save-variant', {
+          method: 'POST',
+          body: `${isWinnerVariantData?.title}`,
+        }).then((res) => {
+          if (!res.ok) {
+            console.log('Failed to fetch data');
+          } else {
+            console.log('Статус ответа:' + res.status);
+          }
+        });
+      }
     }, timer);
   };
 
@@ -85,25 +87,19 @@ export const Widget: React.FC<WidgetProps> = ({ children, speed = 1000, timer = 
   //которая сдвигает список на 1 элемент вверх каждый заданный интервал времени
   useEffect(() => {
     if (isActive) {
-      console.log(currentIndex);
-      if (currentIndex === 0) {
-        setTimeout(() => setCurrentIndex((prev) => prev + 1));
+      if (currentIndex === data.length) {
+        setCurrentIndex((prev) => prev + 1);
+        setTimeout(() => {
+          setCurrentIndex(0);
+        }, speed / 10);
       } else {
         rollInterval.current = setInterval(() => {
-          console.log(currentIndex);
           roll();
         }, speed);
+        return () => clearInterval(rollInterval.current);
       }
-
-      return () => clearInterval(rollInterval.current);
     }
   }, [isActive, currentIndex]);
-
-  useEffect(() => {
-    fetchData().then((result) => {
-      setData([...result]);
-    });
-  }, []);
 
   return (
     <div className={styles.wrapper}>
@@ -111,7 +107,10 @@ export const Widget: React.FC<WidgetProps> = ({ children, speed = 1000, timer = 
       <div className={styles.content}>
         {data.length > 0 && (
           <div className={styles.data}>
-            <div className={clsx(styles.variantsWrapper)} style={variantsWrapperStyle}>
+            <div
+              className={clsx(styles.variantsWrapper)}
+              style={currentIndex < data!.length ? variantsWrapperStyle : variantsWrapperStyleReset}
+            >
               {/*Визуально для пользователя отображаем массив с дополнительными элементами в начале и конце,
               чтобы был эффект непрерывной прокрутки и бесконечности списка*/}
 
@@ -120,9 +119,7 @@ export const Widget: React.FC<WidgetProps> = ({ children, speed = 1000, timer = 
                   key={`${v.id}${index}`}
                   className={clsx(styles.variantItem, { [styles.bonus]: v.isBonus })}
                 >
-                  {v?.isBonus !== true
-                    ? `${v.id - 1}: ${v.title.split(' ').slice(0, 5).join(' ')}...`
-                    : v.title}
+                  {v?.isBonus !== true ? `${v.title.split(' ').slice(0, 5).join(' ')}...` : v.title}
                 </div>
               ))}
             </div>
