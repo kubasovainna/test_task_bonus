@@ -34,6 +34,9 @@
   max-height: 105px;
   height: 105px;
   margin-bottom: 50px;
+  @include maxMobileLg {
+    width: 100%;
+  }
 }
 
 .data {
@@ -55,6 +58,10 @@
 .variantItem {
   padding: 0 20px;
   line-height: 35px;
+  @include maxMobileLg {
+    font-size: 13px;
+
+  }
 }
 
 .bgOpacity {
