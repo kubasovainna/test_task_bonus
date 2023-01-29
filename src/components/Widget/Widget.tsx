@@ -42,15 +42,24 @@ export const Widget: React.FC<WidgetProps> = ({ children, speed = 1000, timer = 
 
   const rollTimeout = useRef<NodeJS.Timeout>();
   const rollInterval = useRef<NodeJS.Timeout>();
+  const animationStyle =
+    isActive && !isWinnerVariantData
+      ? { animation: ` rolling ${(speed / 1000) * data.length}s linear infinite` }
+      : {
+          animation: ` none`,
+          transition: `transform linear 1ms 0s`,
+          transform: 'translateY(-' + currentIndex * offset + 'px)',
+        };
+  //
+  // const variantsWrapperStyleReset = {
+  //   transition: `transform linear 1ms 0s`,
+  //   transform: 'none',
+  // };
+  // const variantsWrapperStyle = {
+  //   transition: `transform linear ${speed / 10}ms 0s`,
+  //   transform: 'translateY(-' + currentIndex * offset + 'px)',
+  // };
 
-  const variantsWrapperStyleReset = {
-    transition: `transform linear 1ms 0s`,
-    transform: 'none',
-  };
-  const variantsWrapperStyle = {
-    transition: `transform linear ${speed / 10}ms 0s`,
-    transform: 'translateY(-' + currentIndex * offset + 'px)',
-  };
   const roll = async () => {
     setCurrentIndex((prevState) => prevState + 1);
   };
@@ -65,8 +74,8 @@ export const Widget: React.FC<WidgetProps> = ({ children, speed = 1000, timer = 
       setIsActive(false);
       const resultIndex = 1 + Math.floor(Math.random() * data!.length);
       const winnerEl = await data?.filter((el) => el.id === resultIndex)[0];
-      setIsWinnerVariantData(winnerEl);
-      setCurrentIndex(resultIndex - 1);
+      await setIsWinnerVariantData(winnerEl);
+      await setCurrentIndex(resultIndex - 1);
       if (winnerEl) {
         console.log('Отправка результата на сервер...');
         await fetch('http://localhost:8080/save-variant', {
@@ -103,14 +112,18 @@ export const Widget: React.FC<WidgetProps> = ({ children, speed = 1000, timer = 
 
   return (
     <div className={styles.wrapper}>
+      <style>
+        {`
+        @keyframes rolling {
+        0% {transform: translateY(-0px)}
+        100% {transform:translateY(-${data.length * offset}px)}
+        }`}
+      </style>
       <h1 className={styles.title}>Испытайте свою удачу</h1>
       <div className={styles.content}>
         {data.length > 0 && (
           <div className={styles.data}>
-            <div
-              className={clsx(styles.variantsWrapper)}
-              style={currentIndex < data!.length ? variantsWrapperStyle : variantsWrapperStyleReset}
-            >
+            <div className={clsx(styles.variantsWrapper)} style={animationStyle}>
               {/*Визуально для пользователя отображаем массив с дополнительными элементами в начале и конце,
               чтобы был эффект непрерывной прокрутки и бесконечности списка*/}
 

@@ -1,6 +1,15 @@
 @import '@/styles/mixins';
 @import '@/styles/constants';
 
+//@keyframes rolling {
+//  0% {
+//    transform: translateY(-0px)
+//  }
+//  100% {
+//    transform: translateY(-400px)
+//  }
+//}
+
 .wrapper {
   display: flex;
   padding: 20px;
@@ -40,8 +49,7 @@
 
 
 //.variantsWrapper {
-//  z-index: 0;
-//  transform: translateY(0);
+//  animation: rolling 30s linear infinite;
 //}
 
 .variantItem {
