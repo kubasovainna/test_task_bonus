@@ -1,15 +1,6 @@
 @import '@/styles/mixins';
 @import '@/styles/constants';
 
-//@keyframes rolling {
-//  0% {
-//    transform: translateY(-0px)
-//  }
-//  100% {
-//    transform: translateY(-400px)
-//  }
-//}
-
 .wrapper {
   display: flex;
   padding: 20px;
@@ -17,6 +8,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  @include maxMobileLg {
+    padding: 20px 15px;
+  }
 }
 
 .title {
@@ -49,11 +43,6 @@
   grid-template-rows: 1fr 1fr 1fr;
   overflow: hidden;
 }
-
-
-//.variantsWrapper {
-//  animation: rolling 30s linear infinite;
-//}
 
 .variantItem {
   padding: 0 20px;

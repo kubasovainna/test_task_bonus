@@ -50,15 +50,6 @@ export const Widget: React.FC<WidgetProps> = ({ children, speed = 1000, timer = 
           transition: `transform linear 1ms 0s`,
           transform: 'translateY(-' + currentIndex * offset + 'px)',
         };
-  //
-  // const variantsWrapperStyleReset = {
-  //   transition: `transform linear 1ms 0s`,
-  //   transform: 'none',
-  // };
-  // const variantsWrapperStyle = {
-  //   transition: `transform linear ${speed / 10}ms 0s`,
-  //   transform: 'translateY(-' + currentIndex * offset + 'px)',
-  // };
 
   const roll = async () => {
     setCurrentIndex((prevState) => prevState + 1);
