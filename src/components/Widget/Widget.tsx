@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import styles from './Widget.module.scss';
 import { Button } from '@/components/Button/Button';
@@ -17,17 +17,13 @@ export interface WidgetProps {
 }
 
 export const Widget: React.FC<WidgetProps> = ({ children, speed = 1000, timer = 3000 }) => {
-  const fetchData = useCallback(async () => {
+  const fetchData = async () => {
     const res = await fetch('http://localhost:8080/get-variants');
     if (!res.ok) {
       console.log('Failed to fetch data');
     }
     return res.json();
-  }, []);
-
-  fetchData().then((result) => {
-    setData([...result]);
-  });
+  };
 
   //Высота по умолчанию для 1 элемента
   const offset = 35;
@@ -51,7 +47,7 @@ export const Widget: React.FC<WidgetProps> = ({ children, speed = 1000, timer = 
           transform: 'translateY(-' + currentIndex * offset + 'px)',
         };
 
-  const roll = async () => {
+  const roll = () => {
     setCurrentIndex((prevState) => prevState + 1);
   };
 
@@ -65,8 +61,8 @@ export const Widget: React.FC<WidgetProps> = ({ children, speed = 1000, timer = 
       setIsActive(false);
       const resultIndex = 1 + Math.floor(Math.random() * data!.length);
       const winnerEl = await data?.filter((el) => el.id === resultIndex)[0];
-      await setIsWinnerVariantData(winnerEl);
-      await setCurrentIndex(resultIndex - 1);
+      setIsWinnerVariantData(winnerEl);
+      setCurrentIndex(resultIndex - 1);
       if (winnerEl) {
         console.log('Отправка результата на сервер...');
         await fetch('http://localhost:8080/save-variant', {
@@ -100,6 +96,12 @@ export const Widget: React.FC<WidgetProps> = ({ children, speed = 1000, timer = 
       }
     }
   }, [isActive, currentIndex]);
+
+  useEffect(() => {
+    fetchData().then((result) => {
+      setData([...result]);
+    });
+  }, []);
 
   return (
     <div className={styles.wrapper}>
